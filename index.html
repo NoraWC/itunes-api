@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src = 'itunes_api.js'></script>
+    <script src = 'interface.js'></script>
+    <title>Nora Coates iTunes API</title>
+</head>
+
+<!--
+    drop text input box or dropdown menu for artist names
+    on submit, display table w/ basic album/artist info + art
+    user picks how many results via dropdown
+    make it pretty
+    fail gracefully
+    no need for a refresh
+
+    ADVANCED:
+    optional detail view
+    jquery animation
+    bells + whistles
+-->
+<body>
+
+<input type = 'text' title= 'artistName' id = 'artistName' value = 'enter the name of your artist'>
+
+<select title = 'numResults' id = 'numResults'>
+    <script>
+        setSelect();
+    </script>
+</select>
+
+<button id = 'search' onclick = 'search(); display(document.getElementById("numResults").value, validateName(document.getElementById("artistName").value));'></button>
+
+<div id = 'display'></div>
+
+</body>
+</html>
