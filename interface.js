@@ -6,13 +6,14 @@ function setSelect() {
     document.getElementById("numResults").innerHTML += returnVal;
 }
 
-function display(rows, artist) {
-    //rows = number of results the user selected from dropdown
-    //artist = validateName(NAME);
-    var table = "<table id = 'displaytable" + artist + "'>";
-    for (var i = 0; i < rows; i++) {
-        //iterate thru artists' itunes library
+function display(obj) {
+
+    var table = "<table id = 'displaytable'>";
+    var mani = obj.results;
+    table += '<th>'+ mani.artistName + '</th>';
+    for (var i = 0; i < document.getElementById("numResults").value; i++) {
+        table += '<tr><td>'+mani[i].collectionCensoredName + '</td><td>' +  mani[i].trackName+'</td></tr>';
     }
     table += "</table>";
-    document.getElementById("display").innerHTML += table;
+    document.getElementById("display").innerHTML = table;
 }

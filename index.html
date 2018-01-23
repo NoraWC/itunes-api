@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src = 'itunes_api.js'></script>
+
     <script src = 'interface.js'></script>
+    <script src = itunes_api.js></script>
     <title>Nora Coates iTunes API</title>
 </head>
 
@@ -24,13 +25,13 @@
 <body>
 
 <input type = 'text' title= 'artistName' id = 'artistName' value = 'artist here'>
+<button onclick = "band = document.getElementById('artistName').value;"></button>
 
 <select title = 'numResults' id = 'numResults'>
-    <script>
-    </script>
+    <script> setSelect();</script>
 </select>
 
-<button id = 'search' onclick = 'search(); display(document.getElementById("numResults").value, validateName(document.getElementById("artistName").value));'></button>
+<button id = 'search' onclick = 'display(go)'></button>
 
 <div id = 'display'></div>
 
