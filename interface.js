@@ -1,7 +1,7 @@
 function setSelect() {
     var returnVal = "";
     for (var i = 0; i < 25; i++) {
-        returnVal += "<option id = '"+ (i+1).toString() + "'>" + (i+1).toString() + "</option>";
+        returnVal += "<option id = '" + (i + 1).toString() + "'>" + (i + 1).toString() + "</option>";
     }
     document.getElementById("numResults").innerHTML += returnVal;
 }

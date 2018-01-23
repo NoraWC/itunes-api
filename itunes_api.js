@@ -9,7 +9,6 @@ $.ajax({
    success: function(result) {
 console.log(result);
 myFunction(result) },
-   error: function() { alert('Failed!'); }
 });
 
  */
@@ -21,7 +20,7 @@ function validateName() {
     var length = NAME.length;
     for(var i = 0; i < length; i++) {
         if(NAME[i] === " ") {
-            NAME = NAME.split(0,i) + "+" NAME.split(i+1, NAME.length);
+            NAME = NAME.split(0,i) + "+" + NAME.split(i+1, NAME.length);
         }
     }
     console.log(NAME);
