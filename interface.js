@@ -1,3 +1,36 @@
+var go;
+/*
+function validateName(x) {
+    var length = x.length;
+    for(var i = 0; i < length; i++) {
+        if(x[i] === " ") {
+            var y = x.substring(0,i);
+            y = y + "+";
+            x = y + x.substring(i+1, x.length);
+        }
+    }
+}
+*/
+function buttons () {
+    document.getElementById('allbuttons').innerHTML = "<button id = 'search' onclick = 'display(go);";
+    /*
+    document.getElementById('allbuttons').innerHTML +=
+        $.ajax({
+            url: 'https://itunes.apple.com/search?term=' + document.getElementById('artistName').value,
+            type: 'GET',
+            crossDomain: true,
+            dataType: 'jsonp',
+            success: function(result) {
+                console.log(result);
+                go = result;
+            },
+            error: function() { alert('Failed!');
+            }
+        });
+        */
+    document.getElementById('allbuttons').innerHTML += "'></button>";
+}
+
 function setSelect() {
     var returnVal = "";
     for (var i = 0; i < 25; i++) {

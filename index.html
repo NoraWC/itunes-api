@@ -16,6 +16,7 @@
     make it pretty
     fail gracefully
     no need for a refresh
+    take/use artist names!!
 
     ADVANCED:
     optional detail view
@@ -25,13 +26,13 @@
 <body>
 
 <input type = 'text' title= 'artistName' id = 'artistName' value = 'artist here'>
-<button onclick = "band = document.getElementById('artistName').value;"></button>
+
 
 <select title = 'numResults' id = 'numResults'>
     <script> setSelect();</script>
 </select>
 
-<button id = 'search' onclick = 'display(go)'></button>
+<div id = 'allbuttons'></div>
 
 <div id = 'display'></div>
 
