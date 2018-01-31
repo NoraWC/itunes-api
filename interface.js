@@ -17,6 +17,7 @@ $(document).ready(
 );
 */
 
+
 function display() {
 
     $.ajax({
@@ -30,34 +31,40 @@ function display() {
                 return 0;
             }
             console.log(result);
+
+
             var table = "<table id = 'displaytable'>";
-            var mani = result.results;
-            var ret = [];
-            var usedRet = [];
+            var albums = [];
+            var titles = "";
             table += '<th>'+ document.getElementById('artistName').value + '</th>';
 
-            for (var i = 0; (i < document.getElementById("numResults").value && i < mani.length); i++) {
-                if(mani[i].kind === 'song') {
-                    ret.push(mani[i]);
+            for (var i = 0; (i < document.getElementById("numResults").value && i < result.results.length); i++) {
+                if(result.results[i].kind === 'song') {
+                    albums.push(result.results[i]);
                 }
             }
-            for (var x = 0; x < document.getElementById('numResults').value; x++) {
-
-                for (var z = 0; z < ret.length; z ++) {
-                    if(z>x) {
-                        x=z;
+            for (var x = 0; x < document.getElementById('numResults').value && x < albums.length ; x++) {
+                titles = albums[x].collectionName;
+                console.log(albums);
+                for (var z = 0; z <= document.getElementById('numResults').value && z < albums.length && albums.length >=1; z ++) {
+                    var thisOne = albums[z].collectionName;
+                    if(titles === thisOne){
+                        //need to add album to table just once
+                        albums = albums.slice(z+1);
+                        console.log(albums);
                     }
-                    if(ret[z] === ret[x]){
-                        ret = ret.slice(z);
-                    }
+                    console.log(thisOne);
+                    console.log(albums[x]);
                 }
-                console.log(ret[x]);
-                table += '<tr><td>' + ret[x].artistName + '</td><td><image src ="'+ret[x].artworkUrl100 +'"></td><td>'+ret[x].collectionName + '</td></tr>';
-
+                if(albums[x] !== undefined) {
+                    table += '<tr><td>' + albums[x].artistName + '</td><td><image src ="'+albums[x].artworkUrl100+'"></td><td>'+albums[x].collectionName+'</td></tr>';
+                }
             }
 
             table += "</table>";
             document.getElementById("display").innerHTML = table;
+
+
         },
         error: function() { alert('Failed!');
         }
