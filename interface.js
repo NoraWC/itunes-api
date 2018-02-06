@@ -8,6 +8,58 @@ function setSelect() {
 }
 
 
+function funct(albums) {
+
+    console.log(albums);
+
+    for (var z = 0; z < albums.length-1; z++) {
+        if(albums[z] !== undefined) {
+
+            var thisName = albums[z].collectionName;
+
+            console.log('this one:', thisName);
+            var bool = false;
+            for (var y = 0; y < albums.length-1; y++) {
+                if(albums[y] !== undefined && albums[z] !== undefined) {
+                    console.log(y);
+                    //sometimes albums[z] will be undefined despite the check for it up top
+
+                    //worked for regina spektor, mother mother;
+                    // the beatles had 1 duplicate (abbey road, @ end and top of list)
+                    //      location doesn't matter; the pogues had rum sodomy and the lash right b4 the end
+                    //for some reason dodie always has tons of multiples
+
+                    if (albums[z].collectionName === albums[y].collectionName) {
+
+                        console.log('that one:', albums[y].collectionName);
+
+                        if(!bool) {
+                            bool = true;
+                        } else {
+                            if(y > 0) {
+                                var greed = albums.slice(0, y);
+                                var geier = albums.slice(y+1, albums.length);
+                                albums = geier.concat(greed);
+                            } else {
+                                albums = albums.slice(1);
+                            }
+                        }
+                        console.log(albums);
+                    }
+                }
+
+            }
+        }
+    }
+
+    for(var len = 0; len < albums.length-1; len++) {
+        if(albums[len] !== undefined) {
+            console.log(albums[len].collectionName);
+        }
+    }
+
+    return albums;
+}
 
 
 function display() {
@@ -20,6 +72,7 @@ function display() {
             console.log(result);
             var albums = [];
             var table = "<table id = 'displaytable'>";
+            var tableLength = 0;
             table += '<th>' + document.getElementById('artistName').value + '</th>';
 
             for (var i = 0; i < result.results.length; i++) {
@@ -28,39 +81,13 @@ function display() {
                 }
 
             }
-            console.log(albums);
-
-            for (var z = 0; z < albums.length; z++) {
-                if(albums[z] !== undefined) {
-                    console.log(albums);
-                    var thisName = albums[z].collectionName;
-
-                    console.log('this one:', thisName);
-
-                    var bool = false;
-
-                    for (var y = 0; y < albums.length; y++) {
-
-                        if (albums[z].collectionId === albums[y].collectionId) {
-
-                            console.log('that one:', albums[y].collectionName);
-                            if(!bool) {
-                                table += '<tr><td>' + albums[z].artistName + '</td><td><image src ="'+albums[z].artworkUrl100+'"></td><td>'+albums[z].collectionName+'</td></tr>';
-                                bool = true;
-                            }
-                            albums = albums.slice(y);
-                            console.log(albums);
-                        }
-                    }
-                }
-
-
-                console.log(albums);
+            for(var z = 0; z < 2; z++) {
+                albums = funct(albums);
             }
 
-
-            for (var f = 0; f < document.getElementById('numResults').value && f < albums.length; f++) {
-                table += '<tr><td>' + albums[f].artistName + '</td><td><image src ="'+albums[f].artworkUrl100+'"></td><td>'+albums[f].collectionName+'</td></tr>';
+            
+            for (tableLength; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
+                table += '<tr><td>' + albums[tableLength].artistName + '</td><td><image src ="'+albums[tableLength].artworkUrl100+'"></td><td>'+albums[tableLength].collectionName+'</td></tr>';
             }
 
             table += "</table>";
