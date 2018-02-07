@@ -1,63 +1,57 @@
 
 function setSelect() {
-    var returnVal = "";
+    //sets up drop down for results
+    var returnVal = "<option id = '1'>How many albums?</option>";
     for (var i = 0; i < 25; i++) {
-        returnVal += "<option id = '" + (i + 1).toString() + "'>" + (i + 1).toString() + "</option>";
+        returnVal += "<option id = '" + (i).toString() + "'>" + (i + 1).toString() + "</option>";
     }
     document.getElementById("numResults").innerHTML += returnVal;
 }
 
 
 function funct(albums) {
-
-    console.log(albums);
-
     for (var z = 0; z < albums.length-1; z++) {
+        //weeds out errors
         if(albums[z] !== undefined) {
-
-            var thisName = albums[z].collectionName;
-
-            console.log('this one:', thisName);
+            //lets each item pass through the for loop below exactly once
             var bool = false;
             for (var y = 0; y < albums.length-1; y++) {
-                if(albums[y] !== undefined && albums[z] !== undefined) {
-                    console.log(y);
-                    //sometimes albums[z] will be undefined despite the check for it up top
-
-                    //worked for regina spektor, mother mother;
-                    // the beatles had 1 duplicate (abbey road, @ end and top of list)
-                    //      location doesn't matter; the pogues had rum sodomy and the lash right b4 the end
-                    //for some reason dodie always has tons of multiples
-
-                    if (albums[z].collectionName === albums[y].collectionName) {
-
-                        console.log('that one:', albums[y].collectionName);
-
-                        if(!bool) {
-                            bool = true;
+                //double check that this is an item; also if it pops up once in each array
+                if(albums[y] !== undefined && albums[z].collectionName === albums[y].collectionName) {
+                    if(!bool) {
+                        //if it hasn't come through before
+                        bool = true;
+                        //it gets ignored by the second loop and sets bool to true
+                        //to stop other items from doing the same thing
+                    } else {
+                        //if it has come through before (ie if there are more than one of the item)
+                        if(y > 0) {
+                            //if it's not 0
+                            //remove it
+                            var firstHalf = albums.slice(0, y);
+                            var secondHalf = albums.slice(y+1, albums.length);
+                            //reconnect the two parts
+                            albums = firstHalf.concat(secondHalf);
                         } else {
-                            if(y > 0) {
-                                var greed = albums.slice(0, y);
-                                var geier = albums.slice(y+1, albums.length);
-                                albums = geier.concat(greed);
-                            } else {
-                                albums = albums.slice(1);
-                            }
+                            //if it is index 0
+                            albums = albums.slice(1);
                         }
-                        console.log(albums);
                     }
                 }
-
             }
         }
     }
-
+    //final sweep for duplicates
     for(var len = 0; len < albums.length-1; len++) {
+        //weeds out errors
         if(albums[len] !== undefined) {
-            console.log(albums[len].collectionName);
+            //iterates through array to find duplicates next to each other
+            if(len > 0 && albums[len].collectionName === albums[len-1].collectionName) {
+                albums = albums.slice(0, len-1).concat(albums.slice(len, albums.length));
+                len = 0;
+            }
         }
     }
-
     return albums;
 }
 
@@ -69,32 +63,42 @@ function display() {
         crossDomain: true,
         dataType: 'jsonp',
         success: function (result) {
-            console.log(result);
-            var albums = [];
-            var table = "<table id = 'displaytable'>";
-            var tableLength = 0;
-            table += '<th>' + document.getElementById('artistName').value + '</th>';
 
-            for (var i = 0; i < result.results.length; i++) {
-                if (result.results[i].kind === 'song') {
-                    albums.push(result.results[i]);
+            if(result.results.length === 0) {
+                //if no results come up
+                alert("iTunes doesn't have any artists that match that name.");
+            } else {
+                var albums = [];
+                var table = "";
+                var tableLength = 0;
+                //table header; includes artist name
+                table += '<th>You searched: ' + document.getElementById('artistName').value + '</th>';
+
+                //adds all songs to array albums (so they can be checked for which album they belong to, etc)
+                for (var i = 0; i < result.results.length; i++) {
+                    if (result.results[i].kind === 'song') {
+                        albums.push(result.results[i]);
+                    }
+                }
+                //iterates through array to make double, triple, quadruple sure there are no duplicates
+                for(var z = 0; z < albums.length; z++) {
+                    albums = funct(albums);
                 }
 
-            }
-            for(var z = 0; z < 2; z++) {
-                albums = funct(albums);
+                //creates table w/ cleaned-up array
+                for (tableLength; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
+                    //table can't be longer than desired results; also can't be longer than available info!
+                    table += '<tr><td>' + albums[tableLength].artistName + '</td><td><image src ="'+albums[tableLength].artworkUrl100;
+                    table += '"></td><td>'+albums[tableLength].collectionName+'</td></tr>';
+                }
+
+                document.getElementById("displaytable").innerHTML = table;
             }
 
-            
-            for (tableLength; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
-                table += '<tr><td>' + albums[tableLength].artistName + '</td><td><image src ="'+albums[tableLength].artworkUrl100+'"></td><td>'+albums[tableLength].collectionName+'</td></tr>';
-            }
-
-            table += "</table>";
-            document.getElementById("display").innerHTML = table;
         },
         error: function () {
-            alert('Failed!');
+            //this never seems to be called so I added it up top
+            alert("iTunes doesn't have any artists that match that name.");
         }
     });
 }

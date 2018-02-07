@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
+    <link rel = 'stylesheet' href = 'itunes_api.css'>
     <script src = 'interface.js'></script>
-    <script src = itunes_api.js></script>
+
     <title>Nora Coates iTunes API</title>
 </head>
 
 <!--
-    drop text input box or dropdown menu for artist names
-    on submit, display table w/ basic album/artist info + art
-    user picks how many results via dropdown
+    CHECK   drop text input box or dropdown menu for artist names
+    CHECK   on submit, display table w/ basic album/artist info + art
+    CHECK   user picks how many results via dropdown
+    CHECK   no need for a refresh
+
     make it pretty
     fail gracefully
-    no need for a refresh
-    take/use artist names!!
 
     ADVANCED:
     optional detail view
@@ -25,15 +25,22 @@
 -->
 <body>
 
-<input type = 'text' title= 'artistName' id = 'artistName' value = 'artist here'>
+<p id = 'title'>Nora Coates iTunes API Project</p>
+<p id = 'revealAll'>To use this, enter the name of the artist you want to search for and the number of albums you want to see.
+    Then press the big red button!</p>
+
+<input type = 'text' title= 'artistName' id = 'artistName' value = 'Type Artist Name Here'>
 
 <select title = 'numResults' id = 'numResults'>
     <script> setSelect();</script>
 </select>
 
-<div id = 'allbuttons'><button id = 'search' onclick = 'display();'></button></div>
+<button id = 'search' onclick = 'display();'>Search!</button>
 
-<div id = 'display'></div>
+<div id = 'display'>
+    <table id = 'displaytable'>
+    </table>
+</div>
 
 </body>
 </html>
