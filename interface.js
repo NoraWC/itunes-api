@@ -1,7 +1,7 @@
 
 function setSelect() {
     //sets up drop down for results
-    var returnVal = "<option id = '1'>How many albums?</option>";
+    var returnVal = "<option>Albums to Display:</option>";
     for (var i = 0; i < 25; i++) {
         returnVal += "<option id = '" + (i).toString() + "'>" + (i + 1).toString() + "</option>";
     }
@@ -11,18 +11,17 @@ function setSelect() {
 
 function funct(albums) {
     for (var z = 0; z < albums.length-1; z++) {
-        //weeds out errors
+
         if(albums[z] !== undefined) {
             //lets each item pass through the for loop below exactly once
             var bool = false;
             for (var y = 0; y < albums.length-1; y++) {
-                //double check that this is an item; also if it pops up once in each array
                 if(albums[y] !== undefined && albums[z].collectionName === albums[y].collectionName) {
+                    //double check that this is an item; also if it pops up once in each array
                     if(!bool) {
-                        //if it hasn't come through before
+                        //if it hasn't come through before it gets ignored
                         bool = true;
-                        //it gets ignored by the second loop and sets bool to true
-                        //to stop other items from doing the same thing
+                        //and sets bool to true to stop other items from doing the same thing
                     } else {
                         //if it has come through before (ie if there are more than one of the item)
                         if(y > 0) {
@@ -67,12 +66,13 @@ function display() {
             if(result.results.length === 0) {
                 //if no results come up
                 alert("iTunes doesn't have any artists that match that name.");
+            } else if (document.getElementById('numResults').value === 'Albums to Display:') {
+                alert("Please choose how many albums to display.");
             } else {
                 var albums = [];
                 var table = "";
                 var tableLength = 0;
-                //table header; includes artist name
-                table += '<th>You searched: ' + document.getElementById('artistName').value + '</th>';
+
 
                 //adds all songs to array albums (so they can be checked for which album they belong to, etc)
                 for (var i = 0; i < result.results.length; i++) {
@@ -88,11 +88,12 @@ function display() {
                 //creates table w/ cleaned-up array
                 for (tableLength; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
                     //table can't be longer than desired results; also can't be longer than available info!
-                    table += '<tr><td>' + albums[tableLength].artistName + '</td><td><image src ="'+albums[tableLength].artworkUrl100;
-                    table += '"></td><td>'+albums[tableLength].collectionName+'</td></tr>';
+                    table += '<tr><td class = "hide"><image src ="'+albums[tableLength].artworkUrl100+'"></td><td>';
+                    table+=albums[tableLength].collectionName+' by ' + albums[tableLength].artistName+'</td></tr>';
                 }
-
-                document.getElementById("displaytable").innerHTML = table;
+                //prettify table header!
+                document.getElementById("displaytable").innerHTML = '<tr><td class = "title">You searched for ' + document.getElementById('artistName').value + '</td><td class = "title">Results: ' + tableLength+'</td></tr>';
+                document.getElementById("displaytable").innerHTML += table;
             }
 
         },

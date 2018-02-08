@@ -29,18 +29,19 @@
 <p id = 'revealAll'>To use this, enter the name of the artist you want to search for and the number of albums you want to see.
     Then press the big red button!</p>
 
-<input type = 'text' title= 'artistName' id = 'artistName' value = 'Type Artist Name Here'>
+<div id = 'selectors'>
+    <input type = 'text' title= 'artistName' id = 'artistName' value = 'Type Artist Name Here' class = 'choosy'>
 
-<select title = 'numResults' id = 'numResults'>
-    <script> setSelect();</script>
-</select>
+    <select title = 'numResults' id = 'numResults' class = 'choosy'>
+        <script> setSelect();</script>
+    </select>
+</div>
+
 
 <button id = 'search' onclick = 'display();'>Search!</button>
 
-<div id = 'display'>
-    <table id = 'displaytable'>
-    </table>
-</div>
+<table id = 'displaytable'>
+</table>
 
 </body>
 </html>

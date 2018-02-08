@@ -3,6 +3,7 @@
  */
 
 button#search {
+    position: relative;
     background-color: red;
     border-radius: 50%;
     width: 50px;
@@ -10,8 +11,46 @@ button#search {
     border : 2px black;
     padding-left: 1px;
     padding-right: 1px;
+    left: 65%;
 }
 
-table {
-    border : 1px black;
+table{
+    position: relative;
+    left:10%;
+    width: 550px;
+}
+image {
+    size: 100px;
+}
+
+td {
+    height: 96px;
+    border: 1px black solid;
+    background-color: lightgrey;
+}
+td.hide {
+    position:relative;
+    background-color: transparent;
+    padding: 0;
+    margin-top: 4px;
+    top: 2px;
+    width: 100px;
+    height: 100px;
+    border: none;
+}
+
+#selectors {
+    position: relative;
+    left: 60%;
+    width: 140px;
+}
+.choosy{
+    margin-bottom: 2%;
+    font-size: 13px;
+}
+td.title {
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
 }
