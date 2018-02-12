@@ -1,7 +1,7 @@
 
 function setSelect() {
     //sets up drop down for results
-    var returnVal = "<option>Albums to Display:</option>";
+    var returnVal = "<option>Max Albums to Display:</option>";
     for (var i = 0; i < 25; i++) {
         returnVal += "<option id = '" + (i).toString() + "'>" + (i + 1).toString() + "</option>";
     }
@@ -11,7 +11,6 @@ function setSelect() {
 
 function funct(albums) {
     for (var z = 0; z < albums.length-1; z++) {
-
         if(albums[z] !== undefined) {
             //lets each item pass through the for loop below exactly once
             var bool = false;
@@ -23,9 +22,9 @@ function funct(albums) {
                         bool = true;
                         //and sets bool to true to stop other items from doing the same thing
                     } else {
-                        //if it has come through before (ie if there are more than one of the item)
+                        //if it has come through before (if there are more than one of the item)
                         if(y > 0) {
-                            //if it's not 0
+                            //if index is not 0
                             //remove it
                             var firstHalf = albums.slice(0, y);
                             var secondHalf = albums.slice(y+1, albums.length);
@@ -41,18 +40,19 @@ function funct(albums) {
         }
     }
     //final sweep for duplicates
-    for(var len = 0; len < albums.length-1; len++) {
+    for(var length = 0; length < albums.length-1; length++) {
         //weeds out errors
-        if(albums[len] !== undefined) {
+        if(albums[length] !== undefined) {
             //iterates through array to find duplicates next to each other
-            if(len > 0 && albums[len].collectionName === albums[len-1].collectionName) {
-                albums = albums.slice(0, len-1).concat(albums.slice(len, albums.length));
-                len = 0;
+            if(length > 0 && albums[length].collectionName === albums[length-1].collectionName) {
+                albums = albums.slice(0, length-1).concat(albums.slice(length, albums.length));
+                length = 0;
             }
         }
     }
     return albums;
 }
+
 
 
 function display() {
@@ -62,17 +62,18 @@ function display() {
         crossDomain: true,
         dataType: 'jsonp',
         success: function (result) {
-
+            var htmlTable = document.getElementById("displaytable");
             if(result.results.length === 0) {
                 //if no results come up
                 alert("iTunes doesn't have any artists that match that name.");
+
             } else if (document.getElementById('numResults').value === 'Albums to Display:') {
+
                 alert("Please choose how many albums to display.");
+
             } else {
                 var albums = [];
                 var table = "";
-                var tableLength = 0;
-
 
                 //adds all songs to array albums (so they can be checked for which album they belong to, etc)
                 for (var i = 0; i < result.results.length; i++) {
@@ -86,14 +87,14 @@ function display() {
                 }
 
                 //creates table w/ cleaned-up array
-                for (tableLength; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
+                for (var tableLength = 0; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
                     //table can't be longer than desired results; also can't be longer than available info!
                     table += '<tr><td class = "hide"><image src ="'+albums[tableLength].artworkUrl100+'"></td><td>';
                     table+=albums[tableLength].collectionName+' by ' + albums[tableLength].artistName+'</td></tr>';
                 }
-                //prettify table header!
-                document.getElementById("displaytable").innerHTML = '<tr><td class = "title">You searched for ' + document.getElementById('artistName').value + '</td><td class = "title">Results: ' + tableLength+'</td></tr>';
-                document.getElementById("displaytable").innerHTML += table;
+
+                htmlTable.innerHTML = '<tr><td class = "title"></td><td class = "title">You searched for ' + document.getElementById('artistName').value + '. Results: ' + tableLength+'</td></tr>';
+                htmlTable.innerHTML += table;
             }
 
         },
@@ -103,3 +104,4 @@ function display() {
         }
     });
 }
+//$('td.title').click($('this').animate({left: '80px'}));

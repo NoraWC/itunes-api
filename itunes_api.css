@@ -1,7 +1,6 @@
-/*
-*
- */
-
+body {
+    background-color: aliceblue;
+}
 button#search {
     position: relative;
     background-color: red;
@@ -12,6 +11,22 @@ button#search {
     padding-left: 1px;
     padding-right: 1px;
     left: 65%;
+}
+
+p#title {
+    font-size: 17px;
+    font-weight: bold;
+    position: relative;
+    text-align: center;
+    text-justify: auto;
+}
+
+p#revealAll {
+    position: relative;
+    text-align: center;
+    text-justify: auto;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 table{
@@ -26,7 +41,7 @@ image {
 td {
     height: 96px;
     border: 1px black solid;
-    background-color: lightgrey;
+    background-color: #F4FAF0;
 }
 td.hide {
     position:relative;

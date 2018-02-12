@@ -14,9 +14,8 @@
     CHECK   on submit, display table w/ basic album/artist info + art
     CHECK   user picks how many results via dropdown
     CHECK   no need for a refresh
-
-    make it pretty
-    fail gracefully
+    CHECK   fail gracefully
+    CHECK   make it pretty
 
     ADVANCED:
     optional detail view
@@ -30,7 +29,7 @@
     Then press the big red button!</p>
 
 <div id = 'selectors'>
-    <input type = 'text' title= 'artistName' id = 'artistName' value = 'Type Artist Name Here' class = 'choosy'>
+    <input type = 'text' title= 'artistName' id = 'artistName' placeholder = 'Type Artist Name Here' class = 'choosy'>
 
     <select title = 'numResults' id = 'numResults' class = 'choosy'>
         <script> setSelect();</script>
@@ -40,8 +39,9 @@
 
 <button id = 'search' onclick = 'display();'>Search!</button>
 
-<table id = 'displaytable'>
+<table id = 'displaytable'><tr><td class = 'hide'></td></tr>
 </table>
+
 
 </body>
 </html>
