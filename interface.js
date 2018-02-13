@@ -1,4 +1,6 @@
 
+var ALBUMS_LIST;
+
 function setSelect() {
     //sets up drop down for results
     var returnVal = "<option>Max Albums to Display:</option>";
@@ -15,7 +17,7 @@ function funct(albums) {
             //lets each item pass through the for loop below exactly once
             var bool = false;
             for (var y = 0; y < albums.length-1; y++) {
-                if(albums[y] !== undefined && albums[z].collectionName === albums[y].collectionName) {
+                if(albums[y] !== undefined && albums[z].collectionId === albums[y].collectionId) {
                     //double check that this is an item; also if it pops up once in each array
                     if(!bool) {
                         //if it hasn't come through before it gets ignored
@@ -44,7 +46,7 @@ function funct(albums) {
         //weeds out errors
         if(albums[length] !== undefined) {
             //iterates through array to find duplicates next to each other
-            if(length > 0 && albums[length].collectionName === albums[length-1].collectionName) {
+            if(length > 0 && albums[length].collectionId === albums[length-1].collectionId) {
                 albums = albums.slice(0, length-1).concat(albums.slice(length, albums.length));
                 length = 0;
             }
@@ -62,6 +64,7 @@ function display() {
         crossDomain: true,
         dataType: 'jsonp',
         success: function (result) {
+
             var htmlTable = document.getElementById("displaytable");
             if(result.results.length === 0) {
                 //if no results come up
@@ -86,11 +89,15 @@ function display() {
                     albums = funct(albums);
                 }
 
+                console.log(albums);
+                ALBUMS_LIST = albums;
+
                 //creates table w/ cleaned-up array
                 for (var tableLength = 0; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
                     //table can't be longer than desired results; also can't be longer than available info!
-                    table += '<tr><td class = "hide"><image src ="'+albums[tableLength].artworkUrl100+'"></td><td>';
-                    table+=albums[tableLength].collectionName+' by ' + albums[tableLength].artistName+'</td></tr>';
+                    table += '<tr><td class = "hide"><image src ="'+albums[tableLength].artworkUrl100+'"></td>';
+                    table += '<td id = "'+albums[tableLength].collectionId+'"><button class = "details"  onclick = "detailView('+tableLength+');">';
+                    table += albums[tableLength].collectionCensoredName+' by '+albums[tableLength].artistName+'</button></td></tr>';
                 }
 
                 htmlTable.innerHTML = '<tr><td class = "title"></td><td class = "title">You searched for ' + document.getElementById('artistName').value + '. Results: ' + tableLength+'</td></tr>';
@@ -103,5 +110,32 @@ function display() {
             alert("iTunes doesn't have any artists that match that name.");
         }
     });
+}
+
+function detailView(num) {
+    var td = document.getElementById(ALBUMS_LIST[num].collectionId);
+    var albumName = ALBUMS_LIST[num].collectionCensoredName;
+    var fin = '<button class = "details"  onclick = "hide('+num+');">';
+    fin += albumName +' by '+ALBUMS_LIST[num].artistName+'<br>Genre: '+ALBUMS_LIST[num].primaryGenreName+'<br>';
+
+    if(ALBUMS_LIST[num].collectionExplicitness !== 'explicit') {
+        fin += "Not explicit";
+    } else {
+        fin += "Explicit";
+    }
+
+    var linkBase = 'https://itunes.apple.com/us/album/';
+    fin += '<br>Tracks: '+ALBUMS_LIST[num].trackCount+'<br>Cost: ' + ALBUMS_LIST[num].collectionPrice+' USD<br>Released on '+ALBUMS_LIST[num].releaseDate.slice(0,10);
+    fin += '<br><a href = '+ALBUMS_LIST[num].collectionViewUrl.slice(0,(linkBase.length+albumName.length))+'>View album in iTunes</a>';
+    //https://itunes.apple.com/us/album/would-you-be-so-kind/1255318399?i=1255319038&uo=4
+    //would-you-be-so-kind/1255318399
+    fin += '</button>';
+    td.innerHTML = fin;
+    td.onclick = 'hide('+num+');';
+}
+
+function hide(num) {
+    var place = document.getElementById(ALBUMS_LIST[num].collectionId);
+    place.innerHTML = '<button class = "details"  onclick = "detailView('+num+');">'+ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName+'</button>';
 }
 //$('td.title').click($('this').animate({left: '80px'}));
