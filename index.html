@@ -15,10 +15,11 @@
     CHECK   user picks how many results via dropdown
     CHECK   no need for a refresh
     CHECK   fail gracefully
-    CHECK   make it pretty
+
+    make it pretty with bootstrap
 
     ADVANCED:
-    optional detail view
+    CHECK optional detail view
     jquery animation
     bells + whistles
 -->
@@ -37,9 +38,16 @@
 </div>
 
 
+<!--
+Since the buttons don't work because they didn't exist when the page was made:
+    -I can create invisible placeholder buttons with the page, then edit their contents
+    ----using the numResults select??
+-->
+
+
 <button id = 'search' onclick = 'display();'>Search!</button>
 
-<table id = 'displaytable'><tr><td class = 'hide'></td></tr>
+<table id = 'displaytable'><tr><td class = 'hide'></td><td class = 'hide'><button class = 'hide details'></button></td></tr>
 </table>
 
 

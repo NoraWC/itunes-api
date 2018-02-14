@@ -96,12 +96,11 @@ function display() {
                 for (var tableLength = 0; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
                     //table can't be longer than desired results; also can't be longer than available info!
                     table += '<tr><td class = "hide"><image src ="'+albums[tableLength].artworkUrl100+'"></td>';
-                    table += '<td id = "'+albums[tableLength].collectionId+'"><button class = "details"  onclick = "detailView('+tableLength+');">';
+                    table += '<td id = "'+albums[tableLength].collectionId+'"><button class = "details" id ='+tableLength+' onclick = "detailView('+tableLength+')">';
                     table += albums[tableLength].collectionCensoredName+' by '+albums[tableLength].artistName+'</button></td></tr>';
                 }
 
-                htmlTable.innerHTML = '<tr><td class = "title"></td><td class = "title">You searched for ' + document.getElementById('artistName').value + '. Results: ' + tableLength+'</td></tr>';
-                htmlTable.innerHTML += table;
+                htmlTable.innerHTML = '<tr><td class = "title" id = "go"></td><td class = "title">You searched for ' + document.getElementById('artistName').value + '. Results: ' + tableLength+'</td></tr>' + table;
             }
 
         },
@@ -115,7 +114,7 @@ function display() {
 function detailView(num) {
     var td = document.getElementById(ALBUMS_LIST[num].collectionId);
     var albumName = ALBUMS_LIST[num].collectionCensoredName;
-    var fin = '<button class = "details"  onclick = "hide('+num+');">';
+    var fin = '<button class = "details">';
     fin += albumName +' by '+ALBUMS_LIST[num].artistName+'<br>Genre: '+ALBUMS_LIST[num].primaryGenreName+'<br>';
 
     if(ALBUMS_LIST[num].collectionExplicitness !== 'explicit') {
@@ -124,11 +123,14 @@ function detailView(num) {
         fin += "Explicit";
     }
 
+
+    fin += '<br>Tracks: '+ALBUMS_LIST[num].trackCount+'<br>Cost: ' + ALBUMS_LIST[num].collectionPrice+' USD<br>Released on ';
+    fin += ALBUMS_LIST[num].releaseDate.slice(0,10)+'<br><a href = ';
     var linkBase = 'https://itunes.apple.com/us/album/';
-    fin += '<br>Tracks: '+ALBUMS_LIST[num].trackCount+'<br>Cost: ' + ALBUMS_LIST[num].collectionPrice+' USD<br>Released on '+ALBUMS_LIST[num].releaseDate.slice(0,10);
-    fin += '<br><a href = '+ALBUMS_LIST[num].collectionViewUrl.slice(0,(linkBase.length+albumName.length))+'>View album in iTunes</a>';
-    //https://itunes.apple.com/us/album/would-you-be-so-kind/1255318399?i=1255319038&uo=4
-    //would-you-be-so-kind/1255318399
+    var songName = ALBUMS_LIST[num].trackName;
+    var url = ALBUMS_LIST[num].collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+ALBUMS_LIST[num].collectionId;
+    fin += url +'>View album in iTunes</a>';
+
     fin += '</button>';
     td.innerHTML = fin;
     td.onclick = 'hide('+num+');';
@@ -136,6 +138,22 @@ function detailView(num) {
 
 function hide(num) {
     var place = document.getElementById(ALBUMS_LIST[num].collectionId);
-    place.innerHTML = '<button class = "details"  onclick = "detailView('+num+');">'+ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName+'</button>';
+    place.innerHTML = '<button class = "details" id ='+tableLength+' onclick = "detailView('+tableLength+')">'+albums[tableLength].collectionCensoredName+' by '+albums[tableLength].artistName+'</button>';
 }
-//$('td.title').click($('this').animate({left: '80px'}));
+/*
+$(document).ready(function() {$('button.details').click(function(){
+    var num = $(this).id;
+    var td = $(this).parent;
+
+})});
+
+$(document).ready(function() {$('td').click(
+    function(){//var num = $(this).id;
+        //doesn't work after table is updated (because element didn't exist?)
+
+        $('p#revealAll').css({'background-color': 'green'});
+        //$(this).css({'background-color': 'green'});
+        //$(this).html("ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName");
+
+})});
+*/
