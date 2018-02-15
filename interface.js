@@ -1,5 +1,5 @@
 
-var ALBUMS_LIST;
+var ALBUMS_LIST = [];
 
 function setSelect() {
     //sets up drop down for results
@@ -8,6 +8,15 @@ function setSelect() {
         returnVal += "<option id = '" + (i).toString() + "'>" + (i + 1).toString() + "</option>";
     }
     document.getElementById("numResults").innerHTML += returnVal;
+}
+
+function begin() {
+    //sets up table
+    var z = "";
+    for (var i = 0; i < 25; i++) {
+        z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'><button class = 'hide' id = 'button"+i+"' onclick = 'detailView("+i+");'></button></td></tr>";
+    }
+    document.getElementById("displaytable").innerHTML += z;
 }
 
 
@@ -57,15 +66,14 @@ function funct(albums) {
 
 
 
-function display() {
+function display(artist) {
     $.ajax({
-        url: 'https://itunes.apple.com/search?term=' + document.getElementById('artistName').value,
+        url: 'https://itunes.apple.com/search?term=' + artist,
         type: 'GET',
         crossDomain: true,
         dataType: 'jsonp',
         success: function (result) {
 
-            var htmlTable = document.getElementById("displaytable");
             if(result.results.length === 0) {
                 //if no results come up
                 alert("iTunes doesn't have any artists that match that name.");
@@ -75,32 +83,35 @@ function display() {
                 alert("Please choose how many albums to display.");
 
             } else {
-                var albums = [];
-                var table = "";
+                ALBUMS_LIST = [];
+                //resets array
 
-                //adds all songs to array albums (so they can be checked for which album they belong to, etc)
+
                 for (var i = 0; i < result.results.length; i++) {
+                    //adds all songs to array albums (so they can be checked for which album they belong to, etc)
                     if (result.results[i].kind === 'song') {
-                        albums.push(result.results[i]);
+                        ALBUMS_LIST.push(result.results[i]);
                     }
                 }
                 //iterates through array to make double, triple, quadruple sure there are no duplicates
-                for(var z = 0; z < albums.length; z++) {
-                    albums = funct(albums);
+                for(var z = 0; z < ALBUMS_LIST.length; z++) {
+                    ALBUMS_LIST = funct(ALBUMS_LIST);
                 }
 
-                console.log(albums);
-                ALBUMS_LIST = albums;
+                console.log(ALBUMS_LIST);
 
-                //creates table w/ cleaned-up array
-                for (var tableLength = 0; tableLength < document.getElementById('numResults').value && tableLength < albums.length; tableLength++) {
-                    //table can't be longer than desired results; also can't be longer than available info!
-                    table += '<tr><td class = "hide"><image src ="'+albums[tableLength].artworkUrl100+'"></td>';
-                    table += '<td id = "'+albums[tableLength].collectionId+'"><button class = "details" id ='+tableLength+' onclick = "detailView('+tableLength+')">';
-                    table += albums[tableLength].collectionCensoredName+' by '+albums[tableLength].artistName+'</button></td></tr>';
+
+                for (var tableLength = 0; tableLength < document.getElementById('numResults').value; tableLength++) {
+                    //edits table to have info
+
+                    $('#td'+tableLength).removeClass("hide");
+                    $('#button'+tableLength).addClass("details");
+                    $('#button'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'<br><br>Click for more info!');
+
+                    $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
+
                 }
 
-                htmlTable.innerHTML = '<tr><td class = "title" id = "go"></td><td class = "title">You searched for ' + document.getElementById('artistName').value + '. Results: ' + tableLength+'</td></tr>' + table;
             }
 
         },
@@ -112,17 +123,14 @@ function display() {
 }
 
 function detailView(num) {
-    var td = document.getElementById(ALBUMS_LIST[num].collectionId);
-    var albumName = ALBUMS_LIST[num].collectionCensoredName;
-    var fin = '<button class = "details">';
-    fin += albumName +' by '+ALBUMS_LIST[num].artistName+'<br>Genre: '+ALBUMS_LIST[num].primaryGenreName+'<br>';
+    var button = document.getElementById('button'+num);
+    var fin = ALBUMS_LIST[num].collectionCensoredName +' by '+ALBUMS_LIST[num].artistName+'<br>Genre: '+ALBUMS_LIST[num].primaryGenreName+'<br>';
 
     if(ALBUMS_LIST[num].collectionExplicitness !== 'explicit') {
         fin += "Not explicit";
     } else {
         fin += "Explicit";
     }
-
 
     fin += '<br>Tracks: '+ALBUMS_LIST[num].trackCount+'<br>Cost: ' + ALBUMS_LIST[num].collectionPrice+' USD<br>Released on ';
     fin += ALBUMS_LIST[num].releaseDate.slice(0,10)+'<br><a href = ';
@@ -131,22 +139,24 @@ function detailView(num) {
     var url = ALBUMS_LIST[num].collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+ALBUMS_LIST[num].collectionId;
     fin += url +'>View album in iTunes</a>';
 
-    fin += '</button>';
-    td.innerHTML = fin;
-    td.onclick = 'hide('+num+');';
+    button.innerHTML = fin;
+    button.onclick = function() {hide(num)};
 }
 
 function hide(num) {
-    var place = document.getElementById(ALBUMS_LIST[num].collectionId);
-    place.innerHTML = '<button class = "details" id ='+tableLength+' onclick = "detailView('+tableLength+')">'+albums[tableLength].collectionCensoredName+' by '+albums[tableLength].artistName+'</button>';
+    var place = document.getElementById('button'+num);
+    place.onclick = function() {detailView(num)};
+    place.innerHTML = ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName+'<br><br>Click for more info!';
 }
-/*
-$(document).ready(function() {$('button.details').click(function(){
+
+$(document).ready(function() {$('button.details').mouseenter(function(){
     var num = $(this).id;
-    var td = $(this).parent;
+    $(this).parent.css({'background_color': 'yellow'});
+
 
 })});
 
+/*
 $(document).ready(function() {$('td').click(
     function(){//var num = $(this).id;
         //doesn't work after table is updated (because element didn't exist?)

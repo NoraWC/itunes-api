@@ -13,8 +13,8 @@
     CHECK   drop text input box or dropdown menu for artist names
     CHECK   on submit, display table w/ basic album/artist info + art
     CHECK   user picks how many results via dropdown
-    CHECK   no need for a refresh
     CHECK   fail gracefully
+    CHECK   no need for a refresh
 
     make it pretty with bootstrap
 
@@ -37,17 +37,10 @@
     </select>
 </div>
 
+<button id = 'search' onclick = 'display(document.getElementById("artistName").value);'>Search!</button>
 
-<!--
-Since the buttons don't work because they didn't exist when the page was made:
-    -I can create invisible placeholder buttons with the page, then edit their contents
-    ----using the numResults select??
--->
-
-
-<button id = 'search' onclick = 'display();'>Search!</button>
-
-<table id = 'displaytable'><tr><td class = 'hide'></td><td class = 'hide'><button class = 'hide details'></button></td></tr>
+<table id = 'displaytable'>
+    <script>begin()</script>
 </table>
 
 
