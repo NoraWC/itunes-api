@@ -14,7 +14,8 @@ function begin() {
     //sets up table
     var z = "";
     for (var i = 0; i < 25; i++) {
-        z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'><button class = 'hide' id = 'button"+i+"' onclick = 'detailView("+i+");'></button></td></tr>";
+        z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'>";
+        z+= "<button class = 'hide' id = 'button"+i+"'></button></td></tr>";
     }
     document.getElementById("displaytable").innerHTML += z;
 }
@@ -107,7 +108,7 @@ function display(artist) {
                     $('#td'+tableLength).removeClass("hide");
                     $('#button'+tableLength).addClass("details");
                     $('#button'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'<br><br>Click for more info!');
-
+                    $('#button'+tableLength).on('click', hide(tableLength));
                     $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
 
                 }
@@ -123,47 +124,38 @@ function display(artist) {
 }
 
 function detailView(num) {
-    var button = document.getElementById('button'+num);
-    var fin = ALBUMS_LIST[num].collectionCensoredName +' by '+ALBUMS_LIST[num].artistName+'<br>Genre: '+ALBUMS_LIST[num].primaryGenreName+'<br>';
+    //callstack size exceeded
 
-    if(ALBUMS_LIST[num].collectionExplicitness !== 'explicit') {
+    //$('#button'+num).on('click',hide(num));
+    var thisAlbum = ALBUMS_LIST[num];
+    var fin = thisAlbum.collectionCensoredName +' by '+thisAlbum.artistName+'<br>Genre: '+thisAlbum.primaryGenreName+'<br>';
+
+    if(thisAlbum.collectionExplicitness !== 'explicit') {
         fin += "Not explicit";
     } else {
         fin += "Explicit";
     }
 
-    fin += '<br>Tracks: '+ALBUMS_LIST[num].trackCount+'<br>Cost: ' + ALBUMS_LIST[num].collectionPrice+' USD<br>Released on ';
-    fin += ALBUMS_LIST[num].releaseDate.slice(0,10)+'<br><a href = ';
-    var linkBase = 'https://itunes.apple.com/us/album/';
-    var songName = ALBUMS_LIST[num].trackName;
-    var url = ALBUMS_LIST[num].collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+ALBUMS_LIST[num].collectionId;
-    fin += url +'>View album in iTunes</a>';
+    fin += '<br>Tracks: '+thisAlbum.trackCount+'<br>Cost: ' + thisAlbum.collectionPrice+' USD<br>Released on ';
+    fin += thisAlbum.releaseDate.slice(0,10)+'<br>';
+    fin += 'Click image to view album in iTunes';
 
-    button.innerHTML = fin;
-    button.onclick = function() {hide(num)};
+
+    var linkBase = 'https://itunes.apple.com/us/album/';
+    var songName = thisAlbum.trackName;
+    var url = thisAlbum.collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+thisAlbum.collectionId;
+
+
+    $('#button'+num).html(fin);
+    $('#image'+num).on('click', function(){window.open(url, '_blank')});
+
 }
 
 function hide(num) {
-    var place = document.getElementById('button'+num);
-    place.onclick = function() {detailView(num)};
-    place.innerHTML = ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName+'<br><br>Click for more info!';
+    $('#button'+num).on('click', detailView(num));
+
+    $('#image'+num).on('click', function(){return 0});
+    $('#button'+num).html(ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName+'<br><br>Click for more info!');
+
+
 }
-
-$(document).ready(function() {$('button.details').mouseenter(function(){
-    var num = $(this).id;
-    $(this).parent.css({'background_color': 'yellow'});
-
-
-})});
-
-/*
-$(document).ready(function() {$('td').click(
-    function(){//var num = $(this).id;
-        //doesn't work after table is updated (because element didn't exist?)
-
-        $('p#revealAll').css({'background-color': 'green'});
-        //$(this).css({'background-color': 'green'});
-        //$(this).html("ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName");
-
-})});
-*/
