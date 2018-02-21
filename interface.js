@@ -10,15 +10,7 @@ function setSelect() {
     document.getElementById("numResults").innerHTML += returnVal;
 }
 
-function begin() {
-    //sets up table
-    var z = "";
-    for (var i = 0; i < 25; i++) {
-        z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'>";
-        z+= "<button class = 'hide' id = 'button"+i+"'></button></td></tr>";
-    }
-    document.getElementById("displaytable").innerHTML += z;
-}
+
 
 
 function funct(albums) {
@@ -87,7 +79,6 @@ function display(artist) {
                 ALBUMS_LIST = [];
                 //resets array
 
-
                 for (var i = 0; i < result.results.length; i++) {
                     //adds all songs to array albums (so they can be checked for which album they belong to, etc)
                     if (result.results[i].kind === 'song') {
@@ -101,17 +92,7 @@ function display(artist) {
 
                 console.log(ALBUMS_LIST);
 
-
-                for (var tableLength = 0; tableLength < document.getElementById('numResults').value; tableLength++) {
-                    //edits table to have info
-
-                    $('#td'+tableLength).removeClass("hide");
-                    $('#button'+tableLength).addClass("details");
-                    $('#button'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'<br><br>Click for more info!');
-                    $('#button'+tableLength).on('click', hide(tableLength));
-                    $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
-
-                }
+                layout();
 
             }
 
@@ -122,11 +103,18 @@ function display(artist) {
         }
     });
 }
+function layout() {
+    for (var tableLength = 0; tableLength < document.getElementById('numResults').value; tableLength++) {
+        //edits table to have info
+        $('#td'+tableLength).removeClass("hide");
 
+        $('#button'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'<br><br>Click for more info!');
+        $('#button'+tableLength).on('click', detailView(tableLength));
+        $('#button'+tableLength).on('dblclick', hide(tableLength));
+        $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
+    }
+}
 function detailView(num) {
-    //callstack size exceeded
-
-    //$('#button'+num).on('click',hide(num));
     var thisAlbum = ALBUMS_LIST[num];
     var fin = thisAlbum.collectionCensoredName +' by '+thisAlbum.artistName+'<br>Genre: '+thisAlbum.primaryGenreName+'<br>';
 
@@ -145,17 +133,37 @@ function detailView(num) {
     var songName = thisAlbum.trackName;
     var url = thisAlbum.collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+thisAlbum.collectionId;
 
+    document.getElementById('button'+num).onclick = hide(num);
 
-    $('#button'+num).html(fin);
-    $('#image'+num).on('click', function(){window.open(url, '_blank')});
+    $('#image'+num).on('click', function(){
+        window.open(url, '_blank');
+    });
+    $('#secret'+num).html(fin);
+    $('#secret'+num).removeClass('hide');
+    console.log('hell'+num);
 
 }
 
 function hide(num) {
-    $('#button'+num).on('click', detailView(num));
-
+    /*
+    $('#button'+num).on('click', function(){
+        detailView(num);
+    });
+    */
+    $('#secret'+num).addClass('hide');
     $('#image'+num).on('click', function(){return 0});
-    $('#button'+num).html(ALBUMS_LIST[num].collectionCensoredName+' by '+ALBUMS_LIST[num].artistName+'<br><br>Click for more info!');
+    console.log('heck'+num);
+}
 
+function begin() {
+    //sets up table
 
+    //add secret div to hold detail view
+    var z = "";
+    for (var i = 0; i < 25; i++) {
+        z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'>";
+        z+= "<button class = 'details' id = 'button"+i+"' onclick = 'detailView("+i+")'></button>";
+        z+="<div id = 'secret"+i+"' class ='hide'></div><div id = 'show"+i+"'></div></td></tr>";
+    }
+    document.getElementById("displaytable").innerHTML += z;
 }
