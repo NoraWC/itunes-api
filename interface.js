@@ -104,66 +104,63 @@ function display(artist) {
     });
 }
 function layout() {
+
+    for (var i = 0; i < 25; i++) {
+        //clears table
+        $('#td'+i).addClass('hide');
+        $('#simple'+i).html("");
+        $('#secret'+i).css({'text-align': 'center'});
+        $('#image'+i).html("");
+    }
+
     for (var tableLength = 0; tableLength < document.getElementById('numResults').value; tableLength++) {
+
         //edits table to have info
         $('#td'+tableLength).removeClass("hide");
 
-        $('#button'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'<br><br>Click for more info!');
-        $('#button'+tableLength).on('click', detailView(tableLength));
-        $('#button'+tableLength).on('dblclick', hide(tableLength));
+        $('#simple'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName);
+        $('#secret'+tableLength).html(detailView(tableLength));
         $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
     }
 }
 function detailView(num) {
     var thisAlbum = ALBUMS_LIST[num];
-    var fin = thisAlbum.collectionCensoredName +' by '+thisAlbum.artistName+'<br>Genre: '+thisAlbum.primaryGenreName+'<br>';
+    var fin = 'Genre: '+thisAlbum.primaryGenreName+'<br>';
 
     if(thisAlbum.collectionExplicitness !== 'explicit') {
         fin += "Not explicit";
     } else {
         fin += "Explicit";
     }
-
     fin += '<br>Tracks: '+thisAlbum.trackCount+'<br>Cost: ' + thisAlbum.collectionPrice+' USD<br>Released on ';
     fin += thisAlbum.releaseDate.slice(0,10)+'<br>';
     fin += 'Click image to view album in iTunes';
-
 
     var linkBase = 'https://itunes.apple.com/us/album/';
     var songName = thisAlbum.trackName;
     var url = thisAlbum.collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+thisAlbum.collectionId;
 
-    document.getElementById('button'+num).onclick = hide(num);
-
     $('#image'+num).on('click', function(){
         window.open(url, '_blank');
     });
-    $('#secret'+num).html(fin);
-    $('#secret'+num).removeClass('hide');
+
+    //fix this right here
+    fin += '<br>Hear a song from this album: <audio src='+thisAlbum.previewUrl+' type="audio/m4a">';
+
     console.log('hell'+num);
-
-}
-
-function hide(num) {
-    /*
-    $('#button'+num).on('click', function(){
-        detailView(num);
-    });
-    */
-    $('#secret'+num).addClass('hide');
-    $('#image'+num).on('click', function(){return 0});
-    console.log('heck'+num);
+    return fin
 }
 
 function begin() {
     //sets up table
 
-    //add secret div to hold detail view
     var z = "";
     for (var i = 0; i < 25; i++) {
         z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'>";
-        z+= "<button class = 'details' id = 'button"+i+"' onclick = 'detailView("+i+")'></button>";
-        z+="<div id = 'secret"+i+"' class ='hide'></div><div id = 'show"+i+"'></div></td></tr>";
+        z+= "<button id = 'go"+i+"' onclick = '$(\"#secret"+i+"\").removeClass(\"hide\");'></button>";//show deets
+        z+= "<button onclick = '$(\"#secret"+i+"\").addClass(\"hide\");'></button>";//hide deets
+        z+= "<div class = 'simple' id = 'simple"+i+"' ></div>";//bare bones info
+        z+= "<div id = 'secret"+i+"' class ='hide'></div></td></tr>";//full info
     }
     document.getElementById("displaytable").innerHTML += z;
 }

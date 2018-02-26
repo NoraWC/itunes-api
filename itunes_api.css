@@ -13,12 +13,13 @@ button#search {
     left: 65%;
 }
 
-button.details {
+.simple {
     background-color: transparent;
     width: 100%;
-    height: 100%;
+    height: 20px;
     padding: 0;
     margin: 0;
+    text-align: center;
 }
 
 p#title {
