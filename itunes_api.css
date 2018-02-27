@@ -13,6 +13,16 @@ button#search {
     left: 65%;
 }
 
+
+button{
+    position: relative;
+    left:95%;
+    margin:0;
+}
+.goHere{
+    top: -19px;
+}
+
 .simple {
     background-color: transparent;
     width: 100%;
@@ -46,6 +56,17 @@ table{
 image{
     position: relative;
     right:200%;
+}
+
+
+.audioPlayer{
+    background-color: transparent;
+    border: none;
+}
+
+.ehh {
+    border: none;
+    background-color: transparent;
 }
 
 td {

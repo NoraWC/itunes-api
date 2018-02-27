@@ -120,6 +120,7 @@ function layout() {
 
         $('#simple'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName);
         $('#secret'+tableLength).html(detailView(tableLength));
+        $('#stop'+tableLength).addClass('goHere');
         $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
     }
 }
@@ -144,11 +145,10 @@ function detailView(num) {
         window.open(url, '_blank');
     });
 
-    //fix this right here
-    fin += '<br>Hear a song from this album: <audio src='+thisAlbum.previewUrl+' type="audio/m4a">';
+    $('#song'+num).html('Hear a song from this album: <audio controls src="' + thisAlbum.previewUrl + '" type="audio/m4a">' + thisAlbum.previewUrl + '</audio>');
 
-    console.log('hell'+num);
-    return fin
+    return fin;
+
 }
 
 function begin() {
@@ -157,10 +157,11 @@ function begin() {
     var z = "";
     for (var i = 0; i < 25; i++) {
         z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'>";
-        z+= "<button id = 'go"+i+"' onclick = '$(\"#secret"+i+"\").removeClass(\"hide\");'></button>";//show deets
-        z+= "<button onclick = '$(\"#secret"+i+"\").addClass(\"hide\");'></button>";//hide deets
+        z+= "<button id = 'go"+i+"' onclick = '$(\"#secret"+i+"\").removeClass(\"hide\"); $(\"song"+i+"\").removeClass(\"audioPlayer\"); $(\"#go"+i+"\").addClass(\"ehh\"); $(\"#stop"+i+"\").removeClass(\"ehh\");'></button>";//show deets
+        z+= "<br><button class = 'ehh' id = 'stop"+i+"' onclick = '$(\"#secret"+i+"\").addClass(\"hide\");$(\"song"+i+"\").addClass(\"audioPlayer\"); $(\"#go"+i+"\").removeClass(\"ehh\"); $(\"#stop"+i+"\").addClass(\"ehh\");'></button>";//hide deets
         z+= "<div class = 'simple' id = 'simple"+i+"' ></div>";//bare bones info
-        z+= "<div id = 'secret"+i+"' class ='hide'></div></td></tr>";//full info
+        z+= "<div id = 'secret"+i+"' class ='hide'></div>";
+        z+= "<div id = 'song"+i+"' class = 'audioPlayer'></div></td></tr>";//full info
     }
     document.getElementById("displaytable").innerHTML += z;
 }
