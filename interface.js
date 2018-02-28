@@ -118,10 +118,18 @@ function layout() {
         //edits table to have info
         $('#td'+tableLength).removeClass("hide");
 
-        $('#simple'+tableLength).html(ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName);
+        $('#simple'+tableLength).html('<a href = "#" id = "link'+tableLength+'">'+ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'</a>');
+        $('#link'+tableLength).on('mousedown', function(){
+            $('#secret'+this.id.slice(4,5)).removeClass('hide');
+        });
+
+        $('#link'+tableLength).on('mouseup', function() {
+            $('#secret'+this.id.slice(4,5)).addClass('hide');
+        });
+
         $('#secret'+tableLength).html(detailView(tableLength));
-        $('#stop'+tableLength).addClass('goHere');
-        $('#image'+tableLength).html('<image src ="'+ALBUMS_LIST[tableLength].artworkUrl100+'">');
+        var imgurl = ALBUMS_LIST[tableLength].artworkUrl100.slice(0, ALBUMS_LIST[tableLength].artworkUrl100.length-3)+'png';
+        $('#image'+tableLength).html('<image class = "image-rounded img-responsive" src ="'+imgurl+'">');
     }
 }
 function detailView(num) {
@@ -135,7 +143,7 @@ function detailView(num) {
     }
     fin += '<br>Tracks: '+thisAlbum.trackCount+'<br>Cost: ' + thisAlbum.collectionPrice+' USD<br>Released on ';
     fin += thisAlbum.releaseDate.slice(0,10)+'<br>';
-    fin += 'Click image to view album in iTunes';
+    fin += 'Click the image to view this album in iTunes!';
 
     var linkBase = 'https://itunes.apple.com/us/album/';
     var songName = thisAlbum.trackName;
@@ -146,7 +154,6 @@ function detailView(num) {
     });
 
     $('#song'+num).html('Hear a song from this album: <audio controls src="' + thisAlbum.previewUrl + '" type="audio/m4a">' + thisAlbum.previewUrl + '</audio>');
-
     return fin;
 
 }
@@ -156,12 +163,10 @@ function begin() {
 
     var z = "";
     for (var i = 0; i < 25; i++) {
-        z+= "<tr><td class = 'hide' id = 'image"+i+"'></td><td class = 'hide' id = 'td"+i+"'>";
-        z+= "<button id = 'go"+i+"' onclick = '$(\"#secret"+i+"\").removeClass(\"hide\"); $(\"song"+i+"\").removeClass(\"audioPlayer\"); $(\"#go"+i+"\").addClass(\"ehh\"); $(\"#stop"+i+"\").removeClass(\"ehh\");'></button>";//show deets
-        z+= "<br><button class = 'ehh' id = 'stop"+i+"' onclick = '$(\"#secret"+i+"\").addClass(\"hide\");$(\"song"+i+"\").addClass(\"audioPlayer\"); $(\"#go"+i+"\").removeClass(\"ehh\"); $(\"#stop"+i+"\").addClass(\"ehh\");'></button>";//hide deets
-        z+= "<div class = 'simple' id = 'simple"+i+"' ></div>";//bare bones info
-        z+= "<div id = 'secret"+i+"' class ='hide'></div>";
-        z+= "<div id = 'song"+i+"' class = 'audioPlayer'></div></td></tr>";//full info
+        z+= "<tr><td class = 'hide' id = 'td"+i+"'>";
+        z+= "<div class = 'col-xs-3' id = 'image"+i+"'></div><div class = 'col-md-6'><span class ='simple' id = 'simple"+i+"'></span>";
+        z+= "<br><span id = 'secret"+i+"' class ='hide'></span>";
+        z+= "<br><span id = 'song"+i+"' class = 'audioPlayer'></span></div></td></tr>";
     }
     document.getElementById("displaytable").innerHTML += z;
 }

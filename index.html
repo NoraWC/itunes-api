@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <link rel = 'stylesheet' href = 'itunes_api.css'>
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src = 'interface.js'></script>
 
     <title>Nora Coates iTunes API</title>
@@ -16,36 +16,35 @@
     CHECK   user picks how many results via dropdown
     CHECK   fail gracefully
     CHECK   no need for a refresh
-
-
-    fix problem where if the second click wants to display fewer albums the old ones are left up
-    make it pretty with bootstrap
+    CHECK   bootstrap
 
     ADVANCED:
     CHECK optional detail view
-    jquery animation
-    bells + whistles
 -->
-<body>
+<body class = 'bg-info'>
 
-<p id = 'title'>Nora Coates iTunes API Project</p>
-<p id = 'revealAll'>To use this, enter the name of the artist you want to search for and the number of albums you want to see.
-    Then press the big red button!</p>
-
-<div id = 'selectors'>
-    <input type = 'text' title= 'artistName' id = 'artistName' placeholder = 'Type Artist Name Here' class = 'choosy'>
-
-    <select title = 'numResults' id = 'numResults' class = 'choosy'>
-        <script> setSelect();</script>
-    </select>
+<div class = 'text-center'>
+<h3>Nora Coates iTunes API Project</h3>
+<h5>To use this, enter the name of the artist you want to search for and the number of albums you want to see.
+    Then press the big red button!</h5>
 </div>
 
-<button id = 'search' onclick = 'display(document.getElementById("artistName").value);'>Search!</button>
+<div class = 'form-group col-xs-4'>
+    <input type = 'text' title= 'artistName' id = 'artistName' placeholder = 'Type Artist Name Here' class = 'form-control'>
 
-<table id = 'displaytable'>
+    <select title = 'numResults' id = 'numResults' class = 'form-control'>
+        <script> setSelect();</script>
+    </select>
+    <button type = 'button' class = 'btn btn-danger' onclick = 'display(document.getElementById("artistName").value);'>Search!</button>
+</div>
+
+
+
+<div class = 'col-md-6'>
+<table class = 'table table-bordered bg-warning' id = 'displaytable'>
     <script>begin()</script>
 </table>
-
+</div>
 
 </body>
 </html>
