@@ -20,13 +20,13 @@ function funct(albums) {
             var bool = false;
             for (var y = 0; y < albums.length-1; y++) {
                 if(albums[y] !== undefined && albums[z].collectionId === albums[y].collectionId) {
-                    //double check that this is an item; also if it pops up once in each array
+                    //double check that this is an item; also if it pops up at least once in each array
                     if(!bool) {
                         //if it hasn't come through before it gets ignored
                         bool = true;
                         //and sets bool to true to stop other items from doing the same thing
                     } else {
-                        //if it has come through before (if there are more than one of the item)
+                        //if it has come through before (i.e. if there are more than one of the item)
                         if(y > 0) {
                             //if index is not 0
                             //remove it
@@ -45,7 +45,6 @@ function funct(albums) {
     }
     //final sweep for duplicates
     for(var length = 0; length < albums.length-1; length++) {
-        //weeds out errors
         if(albums[length] !== undefined) {
             //iterates through array to find duplicates next to each other
             if(length > 0 && albums[length].collectionId === albums[length-1].collectionId) {
@@ -67,17 +66,13 @@ function display(artist) {
         dataType: 'jsonp',
         success: function (result) {
 
-            if(result.results.length === 0) {
+            if(result.results.length === 0 || document.getElementById('numResults').value === 'Albums to Display:') {
                 //if no results come up
-                alert("iTunes doesn't have any artists that match that name.");
-
-            } else if (document.getElementById('numResults').value === 'Albums to Display:') {
-
-                alert("Please choose how many albums to display.");
+                alert("Make sure you've selected an artist and a number of albums to display.");
 
             } else {
                 ALBUMS_LIST = [];
-                //resets array
+                //resets array from previous artists, if any
 
                 for (var i = 0; i < result.results.length; i++) {
                     //adds all songs to array albums (so they can be checked for which album they belong to, etc)
@@ -85,7 +80,7 @@ function display(artist) {
                         ALBUMS_LIST.push(result.results[i]);
                     }
                 }
-                //iterates through array to make double, triple, quadruple sure there are no duplicates
+                //iterates through array to make extra sure there are no duplicates
                 for(var z = 0; z < ALBUMS_LIST.length; z++) {
                     ALBUMS_LIST = funct(ALBUMS_LIST);
                 }
@@ -115,44 +110,55 @@ function layout() {
 
     for (var tableLength = 0; tableLength < document.getElementById('numResults').value; tableLength++) {
 
-        //edits table to have info
+        //edits table to display basic info
         $('#td'+tableLength).removeClass("hide");
 
-        $('#simple'+tableLength).html('<a href = "#" id = "link'+tableLength+'">'+ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'</a>');
+        $('#simple'+tableLength).html('<a href = "#" id = "link'+tableLength+'">'+ALBUMS_LIST[tableLength].collectionCensoredName+' by '+ALBUMS_LIST[tableLength].artistName+'<br>Click and hold for more info!</a>');
+
+        //places info in table (still hidden)
+        $('#secret'+tableLength).html(detailView(tableLength));
+
+        //shows album art
+        var imgurl = ALBUMS_LIST[tableLength].artworkUrl100.slice(0, ALBUMS_LIST[tableLength].artworkUrl100.length-3)+'png';
+        $('#image'+tableLength).html('<image class = "image-thumbnail img-responsive" src ="'+imgurl+'">');
+
+        //when the album title/artist name is clicked, the rest of the info appears...
         $('#link'+tableLength).on('mousedown', function(){
             $('#secret'+this.id.slice(4,5)).removeClass('hide');
         });
-
+        //and disappears when the mouse is removed
         $('#link'+tableLength).on('mouseup', function() {
             $('#secret'+this.id.slice(4,5)).addClass('hide');
         });
-
-        $('#secret'+tableLength).html(detailView(tableLength));
-        var imgurl = ALBUMS_LIST[tableLength].artworkUrl100.slice(0, ALBUMS_LIST[tableLength].artworkUrl100.length-3)+'png';
-        $('#image'+tableLength).html('<image class = "image-rounded img-responsive" src ="'+imgurl+'">');
     }
 }
 function detailView(num) {
+    //sets up detail view
     var thisAlbum = ALBUMS_LIST[num];
     var fin = 'Genre: '+thisAlbum.primaryGenreName+'<br>';
 
+    //checks explicitness
     if(thisAlbum.collectionExplicitness !== 'explicit') {
         fin += "Not explicit";
     } else {
         fin += "Explicit";
     }
+
     fin += '<br>Tracks: '+thisAlbum.trackCount+'<br>Cost: ' + thisAlbum.collectionPrice+' USD<br>Released on ';
     fin += thisAlbum.releaseDate.slice(0,10)+'<br>';
     fin += 'Click the image to view this album in iTunes!';
 
+    //sets up link to album in iTunes (browser)
     var linkBase = 'https://itunes.apple.com/us/album/';
     var songName = thisAlbum.trackName;
     var url = thisAlbum.collectionViewUrl.slice(0,(linkBase.length+songName.length))+"/"+thisAlbum.collectionId;
 
+    //when the image is clicked, a new tab will open to iTunes
     $('#image'+num).on('click', function(){
         window.open(url, '_blank');
     });
 
+    //preview of a song (the song from the album that was found by the AJAX block)
     $('#song'+num).html('Hear a song from this album: <audio controls src="' + thisAlbum.previewUrl + '" type="audio/m4a">' + thisAlbum.previewUrl + '</audio>');
     return fin;
 
@@ -160,13 +166,12 @@ function detailView(num) {
 
 function begin() {
     //sets up table
-
-    var z = "";
+    var table = "";
     for (var i = 0; i < 25; i++) {
-        z+= "<tr><td class = 'hide' id = 'td"+i+"'>";
-        z+= "<div class = 'col-xs-3' id = 'image"+i+"'></div><div class = 'col-md-6'><span class ='simple' id = 'simple"+i+"'></span>";
-        z+= "<br><span id = 'secret"+i+"' class ='hide'></span>";
-        z+= "<br><span id = 'song"+i+"' class = 'audioPlayer'></span></div></td></tr>";
+        table+= "<tr><td class = 'hide' id = 'td"+i+"'><div class = 'col-xs-3' id = 'image"+i+"'></div>"; //sets up image area
+        table+= "<div class = 'col-md-6'><span class ='simple' id = 'simple"+i+"'></span>"; //basic info area
+        table+= "<br><span id = 'secret"+i+"' class ='hide'></span>";//detail view
+        table+= "<br><span id = 'song"+i+"' class = 'audioPlayer'></span></div></td></tr>";//song preview and closing tags
     }
-    document.getElementById("displaytable").innerHTML += z;
+    document.getElementById("displaytable").innerHTML += table;
 }

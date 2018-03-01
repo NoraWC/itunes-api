@@ -8,51 +8,34 @@
     text-align: center;
 }
 
-p#title {
-    font-size: 17px;
-    font-weight: bold;
-    position: relative;
-    text-align: center;
-    text-justify: auto;
+button {
+    background-color: red;
+    border-radius: 50%;
 }
 
-p#revealAll {
-    position: relative;
-    text-align: center;
-    text-justify: auto;
-    margin-left: 20%;
-    margin-right: 20%;
-}
-
-image{
-    height: 100%;
-    width: 100%;
-}
 
 span {
     width: 100%;
+    background-color: green;
 }
 
 .audioPlayer{
     background-color: transparent;
     border: none;
-}
 
-.ehh {
-    border: none;
-    background-color: transparent;
 }
 
 td {
     height: 96px;
+    background-color: green;
     width: 450px;
     border: 1px black solid;
-    background-color: #F4FAF0;
+
 }
 
 .hide {
     position:relative;
-    background-color: transparent;
+
     margin-top: 4px;
     top: 2px;
     size: 100px;
@@ -60,20 +43,4 @@ td {
     height: 100px;
     border: none;
     font-size:0;
-}
-
-#selectors {
-    position: relative;
-    left: 60%;
-    width: 200px;
-}
-.choosy{
-    margin-bottom: 2%;
-    font-size: 13px;
-}
-td.title {
-    background-color: transparent;
-    border: none;
-    font-size: 15px;
-    font-weight: bold;
 }
